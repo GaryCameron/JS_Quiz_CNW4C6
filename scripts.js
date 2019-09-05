@@ -7,6 +7,7 @@ const answer1 = document.getElementById("1");
 const answer2 = document.getElementById("2");
 const answer3 = document.getElementById("3");
 const score = document.getElementById("score");
+const progressBar = document.getElementById("progressBar");
 
 //QUIZ QUESTIONS
 
@@ -46,6 +47,7 @@ let questions = [
 const answerTime = 10;
 let count = 0;
 let TIMER;
+let DELAY;
 
 //QUESTION VARIABLES
 
@@ -68,6 +70,8 @@ startQuiz = () => {
     displayScore();
 };
 
+//RESTART QUIZ FUNCTION
+
 reload = () => {
     location.reload();
     return;
@@ -80,6 +84,7 @@ restart.addEventListener("click",reload);
 
 //DISPLAY TIMER FUNCTION
 //RENDER COUNTER
+
 displayCount = () => {
     if (count <= answerTime){ 
         counter.innerHTML = "Timer "+ count; //displaying counter
@@ -96,6 +101,7 @@ displayCount = () => {
 };
 
 //DISPLAY QUESTION AND ANSWERS
+
 displayQuestion = () => {
    let q = questions[currQ];
    question.innerHTML = "<p>"+ q.question +"<p>";
@@ -104,16 +110,54 @@ displayQuestion = () => {
     answer3.innerHTML = q.answer3;
 };
 
-displayScore = () => {
-    score.innerHTML = "<p>"+ currentScore + "<p>";
-};
+//CHECK USWER ANSWER SELECTION
 
 checkAnswer = (answer) => {
     if (answer == questions[currQ].correct){
         currentScore++;
+        answerCorrect();
+        displayScore();
     }else{
-console.log("currScore");
+    displayScore();
+    answerWrong();
+    }
+    // count = 0;
+    if (currQ < lastQ){
+        currQ++;
+        displayQuestion();
+    }else{
+        clearInterval(TIMER);
+        endQuiz();
     }
 };
 
+// CORRECT ANSWER FUNCTION
 
+answerCorrect = () => {
+    // document.getElementById('score').style.color = 'green';
+    document.getElementById('container').style.backgroundColor = 'green';
+    // score.innerHTML.style.color = 'green';
+};
+
+// INCORRECT ANSWER FUNCTION
+
+answerWrong = () => {
+    // document.getElementById('score').style.color = 'red';
+    document.getElementById('container').style.backgroundColor = 'red';
+
+    // score.innerHTML.style.color = 'red';
+};
+
+//DISPLAY CURRENT SCORE FUNCTION
+
+displayScore = () => {
+    score.innerHTML = "<p>"+ currentScore + "<p>";
+};
+
+endQuiz = () => {
+    DELAY = setInterval(resetQuiz, 5000);
+};
+
+resetQuiz = () => {
+ location.reload();
+};
